@@ -39,7 +39,7 @@ const task = () => {
             </div>
             <div className='space-y-5 mt-5'>
                 {
-                    !isLoading && data.tasks.map((task : ITask) => <TaskCard task={task} key={task.id} />)
+                    !isLoading && data.tasks.map((task : ITask) => <TaskCard task={task} key={task._id} />)
                 }
             </div>
         </div>

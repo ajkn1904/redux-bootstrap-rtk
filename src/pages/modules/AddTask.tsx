@@ -7,6 +7,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
+import { useCreateTaskMutation } from "@/redux/api/baseApi";
 import { useAppSelector } from "@/redux/hooks";
 import type { ITask } from "@/types/taskType";
 import { DialogDescription } from "@radix-ui/react-dialog";
@@ -23,11 +24,19 @@ export function AddTask() {
 
     const form = useForm();
 
-    const dispatch = useDispatch();
+    const [createTask, {data, isLoading, isError}] = useCreateTaskMutation()
+    
+    console.log(data);
 
 
-    const onSubmit: SubmitHandler<FieldValue> = (data) => {
-        dispatch(addTask(data as ITask));
+    const onSubmit: SubmitHandler<FieldValue> = async (data) => {
+        const taskData = {
+            ...data,
+            isCompleted: false,
+
+        }
+        await createTask(taskData as ITask);
+        
         setState(false);
         form.reset();
     }
@@ -104,26 +113,7 @@ export function AddTask() {
                             )}
                             />
 
-                            <FormField control={form.control} name="assignedTo" render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Assign to</FormLabel>
-                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                        <FormControl className="w-full mb-3.5">
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Select an User to assign." />
-                                            </SelectTrigger>
-                                        </FormControl>
-                                        <SelectContent>
-                                            {/* {
-                                                users.map(user => (
-                                                    <SelectItem value={user.id} key={user.id}>{user.name}</SelectItem>
-                                                ))
-                                            } */}
-                                        </SelectContent>
-                                    </Select>
-                                </FormItem>
-                            )}
-                            />
+
 
                             <DialogFooter>
                                 <DialogClose asChild>
