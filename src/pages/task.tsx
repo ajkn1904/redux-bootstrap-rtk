@@ -3,6 +3,8 @@ import TaskCard from './modules/TaskCard';
 import { AddTask } from './modules/AddTask';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useDispatch } from 'react-redux';
+import { useGetTasksQuery } from '@/redux/api/baseApi';
+import type { ITask } from '@/types/taskType';
 
 
 const task = () => {
@@ -13,6 +15,11 @@ const task = () => {
 
     //const filter = useAppSelector(selectFilter);
     //console.log(filter);
+    const {data, isLoading} = useGetTasksQuery(undefined)
+
+    if(isLoading){
+        return <p>Loading...</p>
+    }
 
 
     return (
@@ -30,11 +37,11 @@ const task = () => {
                 </Tabs>
                 <AddTask />
             </div>
-            {/* <div className='space-y-5 mt-5'>
+            <div className='space-y-5 mt-5'>
                 {
-                    todo.map(task => <TaskCard task={task} key={task.id} />)
+                    !isLoading && data.tasks.map((task : ITask) => <TaskCard task={task} key={task.id} />)
                 }
-            </div> */}
+            </div>
         </div>
     );
 };
